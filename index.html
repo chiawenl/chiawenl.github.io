@@ -1,16 +1,1306 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的第一個網頁</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <h1>你好，世界！</h1>
-  <p>這是我用 GitHub Pages 架設的第一個網站。</p>
-  <button onclick="sayHi()">點我一下</button>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Chia-Wen Lo | Academic Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #ea580c; /* orange-600 */
+            --accent-dark: #9a3412; /* orange-900 */
+            --bg: #fafafa;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: #0f172a;
+            overflow-x: hidden;
+            background: radial-gradient(circle at var(--bg-x, 50%) var(--bg-y, 50%), rgba(255, 237, 213, 0.4) 0%, rgba(250, 250, 250, 1) 50%);
+        }
+        .serif { font-family: 'Noto Serif TC', serif; }
+        html { scroll-behavior: smooth; }
 
-  <script src="script.js"></script>
+        /* Bento Card 效果 */
+        .bento-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .bento-card:hover::before { opacity: 1; }
+        .bento-card:hover {
+            transform: translateY(-10px) scale(1.005);
+            box-shadow: 0 30px 60px rgba(249, 115, 22, 0.05);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+
+        /* 彈窗與選單 */
+        .modal-blur {
+            backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.75);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-blur.active { opacity: 1; pointer-events: auto; }
+        
+        #mobile-menu-overlay {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.98);
+        }
+        #mobile-menu-overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* 輪播 */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 2rem;
+            margin-bottom: 2rem;
+            background-color: #fff7ed;
+        }
+        @media (min-width: 768px) { .carousel-container { height: 320px; border-radius: 3rem; } }
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background-size: cover;
+            background-position: center;
+        }
+        .carousel-slide.active { opacity: 1; }
+
+        /* 按鈕系統 */
+        .btn-oval {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.7rem 1.4rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid var(--accent);
+            background: white;
+            color: var(--accent);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        @media (min-width: 768px) { .btn-oval { padding: 0.8rem 1.8rem; font-size: 0.75rem; } }
+        .btn-oval:hover { background-color: var(--accent); color: white; transform: scale(1.05); }
+        .btn-action { padding: 0.4rem 0.8rem; font-size: 0.6rem; gap: 0.4rem; margin-top: 0.4rem; border-width: 1px; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0.04; z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="selection:bg-orange-100 text-left">
+    <div class="noise"></div>
+
+    <!-- 背景標語 -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden flex items-center justify-center opacity-[0.03] md:opacity-[0.05]">
+        <h1 id="parallax-text" class="text-[40vw] md:text-[35vw] font-black leading-none uppercase tracking-tighter serif text-orange-900 transition-transform duration-200">CHIA-WEN</h1>
+    </div>
+
+    <!-- 桌面導覽列 -->
+    <nav class="hidden md:flex fixed top-8 left-1/2 -translate-x-1/2 z-[1000] bg-white/70 backdrop-blur-xl border border-orange-100 px-8 py-4 rounded-full shadow-2xl items-center space-x-8 text-[10px] font-extrabold uppercase tracking-[0.25em]">
+        <a href="#intro" class="hover:text-orange-600 transition-all">HOME</a>
+        <a href="#about-me" class="hover:text-orange-600 transition-all">ABOUT</a>
+        <a href="#employment-anchor" class="hover:text-orange-600 transition-all">EMPLOYMENT</a>
+        <a href="#honors-anchor" class="hover:text-orange-600 transition-all">HONORS</a>
+        <a href="#research-anchor" class="hover:text-orange-600 transition-all">RESEARCH</a>
+        <a href="#teaching-anchor" class="hover:text-orange-600 transition-all">TEACHING</a>
+        <a href="#connect-section" class="bg-slate-900 text-white px-5 py-2.5 -my-2 rounded-full hover:bg-orange-600 transition-all">CONNECT</a>
+    </nav>
+
+    <!-- 行動版選單按鈕 -->
+    <div class="md:hidden fixed top-4 right-4 z-[2000]">
+        <button onclick="toggleMobileMenu()" class="bg-white/90 backdrop-blur-md border border-orange-100 rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+            <svg id="menu-icon" class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <!-- 行動版選單內容 -->
+    <div id="mobile-menu-overlay" class="md:hidden fixed inset-0 z-[1900] flex flex-col items-center justify-center space-y-8">
+        <a href="#intro" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">HOME</a>
+        <a href="#about-me" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">ABOUT</a>
+        <a href="#employment-anchor" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">EMPLOYMENT</a>
+        <a href="#honors-anchor" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">HONORS</a>
+        <a href="#research-anchor" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">RESEARCH</a>
+        <a href="#teaching-anchor" onclick="toggleMobileMenu()" class="text-4xl font-black serif text-slate-800">TEACHING</a>
+        <a href="#connect-section" onclick="toggleMobileMenu()" class="btn-oval bg-orange-600 !text-white px-10 py-4 !text-lg">CONNECT</a>
+    </div>
+
+    <!-- Hero -->
+    <section id="intro" class="min-h-screen flex flex-col justify-center px-6 pt-24 md:pt-0">
+    <div class="max-w-7xl mx-auto w-full relative z-10 text-left">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-20 items-center">
+            <div class="lg:col-span-7">
+
+                <div class="reveal inline-flex items-center space-x-2 px-3 py-1 
+                    bg-orange-50 text-orange-700 rounded-full 
+                    text-[10px] font-semibold tracking-wider mb-6 
+                    border border-orange-100 uppercase">
+                    Assistant Professor
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl md:text-7xl 
+                    font-extrabold tracking-tight 
+                    leading-tight md:leading-[0.95] 
+                    reveal">
+                    <span class="uppercase">
+                        CHIA-WEN LO<span class="text-orange-500">.</span>
+                    </span>
+                    <br>
+                    <span class="text-slate-400 text-2xl sm:text-3xl md:text-4xl font-medium">
+                        羅 佳 雯
+                    </span>
+                </h1>
+
+                <p class="mt-8 md:mt-12 text-base md:text-xl 
+                    text-slate-500 max-w-2xl 
+                    font-light reveal leading-relaxed">
+                    <span class="text-slate-800 font-medium">
+                        I study the cognitive and neural foundations of human language, 
+                        combining linguistics with experimental and brain-based methods.
+                    </span>
+                </p>
+
+            </div>
+
+            <div class="lg:col-span-5 reveal">
+                <div class="relative group max-w-sm mx-auto">
+                    <div class="absolute -inset-4 bg-orange-100/40 
+                        rounded-[2rem] blur-2xl 
+                        group-hover:bg-orange-200/40 
+                        transition-all duration-700"></div>
+                    <img src="/Users/chiawenl/Desktop/NSYSU/my-website/ChiaWenLo_MPI.png" 
+                        class="relative aspect-[4/5] object-cover 
+                        rounded-[2rem] shadow-xl 
+                        border-white border-8 
+                        grayscale hover:grayscale-0 
+                        transition-all duration-700">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+    <!-- About Me -->
+    <section id="about-me" class="py-12 md:py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+        <div onclick="openModal('about')" 
+            class="bento-card rounded-[2.5rem] md:rounded-[3.5rem] 
+            p-8 md:p-16 cursor-pointer group 
+            border-orange-50 reveal">
+
+            <div class="flex flex-col lg:flex-row items-center gap-12 text-left">
+
+                <div class="flex-1 space-y-6">
+
+                    <span class="text-[10px] font-semibold tracking-wider 
+                        text-orange-500 uppercase">
+                        01 / Profile
+                    </span>
+
+                    <h2 class="text-3xl md:text-5xl 
+                        font-extrabold serif 
+                        text-slate-800">
+                        Academic Journey
+                    </h2>
+
+                    <p class="text-slate-500 
+                        text-base md:text-lg 
+                        leading-relaxed max-w-xl">
+                        My research brings together linguistics, psychology, and neuroscience 
+                        to study how language is represented and processed in the human mind.
+                    </p>
+
+                    <button class="btn-oval mt-4 text-sm font-medium">
+                        Discover My Story →
+                    </button>
+
+                </div>
+
+                <div class="hidden lg:block w-1/3 
+                    text-[9rem] font-bold 
+                    text-orange-50 select-none serif">
+                    Me.
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Experience (獨立區塊 - 已新增更多按鈕) -->
+    <section id="employment-anchor" class="py-12 px-6">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="bento-card rounded-[2.5rem] p-10 md:p-16 border-orange-50 bg-white reveal">
+
+            <!-- Section label -->
+            <span class="text-[10px] font-semibold tracking-wider text-orange-500 uppercase mb-6 block">
+                02 / Experience
+            </span>
+
+            <!-- Grid of experiences -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-left">
+
+            <!-- Current Position -->
+            <div class="group reveal">
+            <span class="text-orange-500 font-medium text-xs tracking-wide block mb-2">
+            Feb 2026 — Present
+            </span>
+
+            <h3 class="text-lg md:text-xl font-semibold serif text-slate-800 leading-relaxed">
+                Department of Foreign Languages and Literature,<br>
+                National Sun Yat-sen University,<br>
+                Kaohsiung, Taiwan<br>
+            <span class="text-slate-500">國立中山大學 外國語文學系</span>
+            </h3>
+
+            <p class="text-slate-500 mt-2 text-sm italic">
+            Assistant Professor · 助理教授
+            </p>
+            </div>
+
+            <!-- Previous Position -->
+            <div class="group border-l border-slate-200 pl-6 reveal">
+            <span class="text-slate-400 font-medium text-xs tracking-wide block mb-2">
+                Sep 2021 — Dec 2024
+            </span>
+
+            <h3 class="text-lg md:text-xl font-semibold serif text-slate-800 leading-relaxed">
+                Language Cycles,<br>
+                Max Planck Institute for Human Cognitive and Brain Sciences,<br>
+                Leipzig, Germany
+            </h3>
+
+            <p class="text-slate-500 mt-2 text-sm italic">
+                Postdoctoral Researcher · 博士後研究員
+            </p>
+            </div>
+
+            <!-- Button -->
+            <div class="mt-12 text-left reveal">
+                <button onclick="openModal('experience')" class="btn-oval w-full sm:w-auto justify-center">
+                    View Detailed Experiences →
+                </button>
+            </div>
+
+            
+        </div>
+    </div>
+</section>
+
+
+    <!-- Honors (獨立區塊) -->
+    <section id="honors-anchor" class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="bento-card rounded-[2.5rem] p-10 md:p-16 border-orange-50 bg-white reveal">
+                <span class="text-[10px] font-black tracking-[0.3em] text-orange-500 uppercase mb-8 block text-left">03 / Recognition</span>
+                <div class="flex flex-col lg:flex-row justify-between items-start gap-12 text-left">
+                    <div class="flex-1 space-y-8">
+                        <h3 class="text-4xl md:text-5xl font-black serif text-slate-800">Honors & Awards</h3>
+                        <ul class="space-y-6">
+                            <li class="flex justify-between items-center max-w-xl">
+                                <span class="text-xl font-bold">Barbour Scholar</span>
+                                <span class="text-xs font-black bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full uppercase">2020</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('honors')" class="btn-oval py-5 px-10">View All Honors →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research (4 欄並行，降低高度) -->
+    <section id="research-anchor" class="py-20 md:py-32 bg-slate-50 px-6">
+        <div class="max-w-7xl mx-auto text-left">
+            <h2 class="text-xs font-black tracking-[0.3em] text-orange-500 uppercase mb-4">Research Portfolio</h2>
+            <h3 class="text-4xl md:text-6xl font-black serif text-slate-800 mb-12">Vision & Works</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div onclick="openModal('publications')" class="bento-card rounded-3xl p-8 cursor-pointer h-[300px]">
+                    <span class="text-[10px] font-black text-orange-500 uppercase">04 / Articles</span>
+                    <h4 class="text-2xl font-black serif mt-4">Publications</h4>
+                    <p class="text-sm text-slate-400 mt-2">期刊發表</p>
+                    <div class="mt-auto"><span class="text-xs font-black text-orange-600">EXPLORE →</span></div>
+                </div>
+                <div onclick="openModal('proceedings')" 
+     class="bento-card rounded-3xl p-8 cursor-pointer h-[300px] 
+            border border-orange-100 bg-orange-50/40 
+            hover:bg-orange-100/60 transition-all">
+
+    <span class="text-[10px] font-black text-orange-600 uppercase tracking-widest">
+        05 / Events
+    </span>
+
+    <h4 class="text-2xl font-black serif mt-4 text-slate-800">
+        Proceedings
+    </h4>
+
+    <p class="text-sm text-slate-500 mt-2">
+        Conference papers & findings
+    </p>
+
+    <div class="mt-auto">
+        <span class="text-xs font-black text-orange-600">
+            BROWSE →
+        </span>
+    </div>
+</div>
+
+                <div onclick="openModal('talks')" class="bento-card rounded-3xl p-8 cursor-pointer h-[300px] hover:bg-orange-500 hover:text-white transition-all">
+                    <span class="text-[10px] font-black uppercase">06 / Lectures</span>
+                    <h4 class="text-2xl font-black serif mt-4">Invited Talks</h4>
+                    <p class="text-sm mt-2 opacity-50">受邀演講</p>
+                    <div class="mt-auto"><span class="text-xs font-black">VIEW →</span></div>
+                </div>
+                <div onclick="openModal('presentations')" class="bento-card rounded-3xl p-8 cursor-pointer h-[300px]">
+                    <span class="text-[10px] font-black text-orange-500 uppercase">07 / Activity</span>
+                    <h4 class="text-2xl font-black serif mt-4">Oral & Poster</h4>
+                    <p class="text-sm text-slate-400 mt-2">研討會發表</p>
+                    <div class="mt-auto"><span class="text-xs font-black text-orange-600">DETAILS →</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="teaching-anchor" class="py-24 px-6 bg-slate-50">
+  <!-- 標題 -->
+  <h5 class="text-5xl md:text-8xl font-black text-slate-900 mb-16 uppercase reveal">
+    Teaching
+  </h5>
+
+  <!-- 大框框 -->
+  <div class="bg-white border border-orange-100 rounded-[3rem] p-12 shadow-lg reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+      <!-- 2026 Winter -->
+      <div
+        onclick="openModal('teaching-2026-winter')"
+        class="cursor-pointer hover:bg-orange-50 transition p-8 rounded-2xl border border-orange-50"
+      >
+        <span class="text-[10px] font-black tracking-widest text-orange-500 uppercase mb-2 block">
+          2026 Winter
+        </span>
+        <h4 class="text-xl md:text-2xl font-semibold serif text-slate-800">
+          Click to view courses →
+        </h4>
+      </div>
+
+      <!-- 2026 Fall -->
+      <div
+        onclick="openModal('teaching-2026-fall')"
+        class="cursor-pointer hover:bg-orange-50 transition p-8 rounded-2xl border border-orange-50"
+      >
+        <span class="text-[10px] font-black tracking-widest text-orange-500 uppercase mb-2 block">
+          2026 Fall
+        </span>
+        <h4 class="text-xl md:text-2xl font-semibold serif text-slate-800">
+          Click to view courses →
+        </h4>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+    <!-- Footer / Connect (錨點修復) -->
+    <footer id="connect-section" class="py-24 px-6 bg-white text-center border-t border-slate-100">
+    
+    <h5 class="text-5xl md:text-8xl font-black text-slate-900 mb-12 uppercase reveal">
+        Contact
+    </h5>
+
+    <!-- Email (Primary) -->
+    <a href="mailto:chiawen.lo@youruniversity.edu"
+       class="text-2xl md:text-5xl font-bold serif text-slate-900 hover:text-orange-600 transition-all border-b-4 border-orange-50 pb-2 break-all">
+        chiawenl[AT]mail.nsysu.edu.tw
+    </a>
+
+    <!-- Links -->
+    <div class="mt-12 flex flex-col md:flex-row gap-6 justify-center text-sm md:text-base font-semibold uppercase tracking-widest text-slate-500">
+        
+        <a href="https://scholar.google.com/citations?user=mpReB4YAAAAJ&hl=en"
+           target="_blank"
+           class="hover:text-orange-600 transition">
+            google scholar
+        </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://www.linkedin.com/in/chia-wen-lo-7ab872106/"
+           target="_blank"
+           class="hover:text-orange-600 transition">
+            LinkedIn
+        </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://www.researchgate.net/profile/Chia-Wen-Lo"
+           target="_blank"
+           class="hover:text-orange-600 transition">
+            ResearchGate
+        </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://github.com/chiawenl"
+           target="_blank"
+           class="hover:text-orange-600 transition">
+            GitHub
+        </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://zephyr.nsysu.edu.tw/front/About_Us/564352/4352234/member.php?ID=5a4326493836406d4c77532548645968722b8f61e3cb55bd6546e391f0ad662691cf317cd76b04381671e9467ef198&PID=110"
+           target="_blank"
+           class="hover:text-orange-600 transition">
+            Department Page
+        </a>
+    </div>
+
+    <p class="mt-16 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+        © 2026 Chia-Wen Lo · Academic Website
+    </p>
+</footer>
+
+
+
+
+    <!-- Modal 彈窗結構 -->
+    <div id="modal-overlay" class="modal-blur fixed inset-0 z-[5000] flex items-center justify-center p-2 md:p-4 text-left">
+        <div class="modal-content-wrapper bg-white w-full max-w-5xl h-[92vh] rounded-[2.5rem] md:rounded-[4rem] shadow-2xl flex flex-col overflow-hidden relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 md:top-8 md:right-8 w-12 h-12 rounded-full bg-white/80 shadow-lg flex items-center justify-center z-[5100] hover:bg-orange-50 transition-colors">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modal-scroll-area" class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8">
+                <div id="modal-banner-root"></div>
+                <div class="px-4 md:px-12 pb-24 text-left">
+                    <span id="modal-category" class="text-[10px] font-black text-orange-600 uppercase tracking-widest">CATEGORY</span>
+                    <h3 id="modal-title" class="text-3xl md:text-6xl font-black serif text-slate-900 mt-4 leading-tight">標題</h3>
+                    <div id="modal-content" class="mt-12 text-left"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCat = document.getElementById('modal-category');
+        const modalContent = document.getElementById('modal-content');
+        const bannerRoot = document.getElementById('modal-banner-root');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        let carouselInterval;
+
+        function toggleMobileMenu() {
+            const isActive = mobileMenuOverlay.classList.toggle('active');
+            if (isActive) {
+                document.body.style.overflow = 'hidden';
+                menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+                document.body.style.overflow = 'auto';
+                menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>';
+            }
+        }
+
+        // 按鈕組件產生器 (支援 PDF 與 Link)
+        const actionBtn = (type = "pdf", label = "Download", url = "#") => {
+            const icon = type === "pdf" ? '📄' : '🔗';
+            return `<a href="${url}" target="_blank" class="btn-oval btn-action shadow-sm hover:shadow-md transition-all">${icon} ${label}</a>`;
+        };
+
+        // 所有內容頁資料
+        const data = {
+            about: {cat: "Curriculum Vitae",
+            title: "Academic Background",
+            images: ["brainwave.png"],
+            content: `<div class="space-y-12 text-left">
+                <div class="flex flex-col md:flex-row justify-between gap-10 pb-10 border-b border-orange-100">
+                    <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-xl font-light">
+                        My research brings together linguistics, psychology, and neuroscience 
+                        to understand how language is represented and processed in the human mind.</p>
+                    <a href="Resume260128.pdf" target="_blank" class="btn-oval bg-orange-600 !text-white h-fit shadow-lg shadow-orange-100 flex items-center gap-2 text-sm font-medium"> 📄 Download CV (PDF) </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-6"> <h4 class="text-xs font-semibold text-orange-500 uppercase tracking-wider"> Education </h4>
+                        <div class="pl-6 border-l border-orange-300 space-y-4">
+
+                    <div><p class="text-xs text-orange-600 mb-1">  Sep 2015 — May 2021 </p>
+                        <h5 class="text-lg font-semibold text-slate-800"> Ph.D. in Linguistics </h5>
+                        <p class="text-sm text-slate-500"> University of Michigan, Ann Arbor, USA </p>
+                    </div>
+
+                    <div> <p class="text-xs text-orange-600 mb-1"> Sep 2009 — July 2012 </p>
+                        <h5 class="text-lg font-semibold text-slate-800"> M.A. in Linguistics </h5>
+                        <p class="text-sm text-slate-500"> National Chung Cheng University, Taiwan </p>
+                    </div>
+
+                    <div> <p class="text-xs text-orange-600 mb-1"> Sep 2004 — June 2008 </p>
+                        <h5 class="text-lg font-semibold text-slate-800"> B.A. in Foreign Languages and Literature </h5>
+                        <p class="text-sm text-slate-500"> National Chung Cheng University, Taiwan </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h4 class="text-xs font-semibold 
+                    text-orange-500 uppercase tracking-wider">
+                    Research Interests
+                </h4>
+
+                <ul class="space-y-3 text-slate-700 text-sm md:text-base">
+                    <li>Neurolinguistics</li>
+                    <li>Psycholinguistics</li>
+                    <li>Computational Linguistics</li>
+                    <li>Experimental Syntax & Semantics</li>
+                    <li>Cognitive Science</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+    `
+                    },
+
+            experience: {
+                cat: "Professional", title: "Detailed Work Experience",
+                images: ["MPI.png"],
+                content: `<div class="space-y-8 text-left">
+                    <div class="p-8 border border-orange-100 rounded-[2.5rem] bg-orange-50/20 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-orange-600 font-black text-xs uppercase tracking-widest">Feb 2026 — PRESENT</span><h4 class="text-2xl font-black mt-2">Department of Foreign Languages and Literature, <br> National Sun Yat-sen University, <br> Kaohsing, Taiwan <br> (國立中山大學 外國語文學系)</h4><p class="text-slate-500 italic">Assistant Professor</p></div>
+                        ${actionBtn("link", "Department Site", "https://zephyr.nsysu.edu.tw/index.php")}
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">Sep 2021 — Dec 2024</span><h4 class="text-2xl font-black mt-2">Language Cycles, <br> Max Planck Institute for Human Cognitive and Brain Sciences, <br> Leipzig, Germany </h4><p class="text-slate-500 italic">Postdoctoral Researcher <br> • Supervisor: Dr. habil. Lars Meyer <br> • EEG data collection <br> • Data analysis <br> • Computational modeling <br> • Internship/research assistant mentoring</p></div>
+                        ${actionBtn("link", "Research Group Site", "http://languagecycles.com/")}
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">Sep 2018 - Apr 2021</span><h4 class="text-2xl font-black mt-2">Computational Neurolinguistics Lab, <br> Department of Linguistics, <br> University of Michigan, <br> Ann Arbor, Michigan, USA </h4><p class="text-slate-500 italic">Graduate Student Research Assistant <br> • Supervisor: Prof. Jonathan Brennan <br> • EEG data collection <br> • Data analysis <br> • Computational modeling <br> • Undergrads mentoring</p></div>
+                        ${actionBtn("link", "Lab Site", "https://cnllab.github.io/")}
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">Sep 2016 - Dec 2017</span><h4 class="text-2xl font-black mt-2"> Department of Linguistics, <br> University of Michigan, <br> Ann Arbor, Michigan, USA </h4><p class="text-slate-500 italic">Graduate Student Instructor <br> • Ling 111 - Introduction to Language, taught by Dr. Jelena Krivokapić (Fall 2016) <br> • Ling 111 - Introduction to Language, taught by Dr. Jelena Krivokapić (Winter 2017) <br> • Ling 111 - Introduction to Language, taught by Dr. Andries Coetzee (Fall 2017)</p></div>
+                        ${actionBtn("link", "Department Site", "https://lsa.umich.edu/linguistics")}
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">May 2014 - June 2015</span><h4 class="text-2xl font-black mt-2"> Google <br> Taipei, Taiwan </h4><p class="text-slate-500 italic">Speech data evaluator <br> • Annotated and classify linguistic data <br> • Evaluated audio data <br> • Labeled text for disambiguation, expansion, and text normalization <br> • Provided phonetic transcription of lexicon entries according to given standards and use in-house tools </p></div>
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">Aug 2012 - Apr 2014</span><h4 class="text-2xl font-black mt-2"> Graduate Institute of Linguistics, <br> National Chung Cheng University <br> Chiayi, Taiwan </h4><p class="text-slate-500 italic">Full-time research assistant <br> • Supervisors: Prof. James Myers & Prof. Jane Tsay <br> • Research Project: Mandarin Wordlikeness Megastudies <br> • Lab member mentoring: (1) speech-to-text transcription for the Spoken Taiwanese Southern Min Corpus, (2) Data collection <br> • Data collection for psycholinguistic experiments <br> • Human research ethical review application <br> • Cooperated with a programmer to build the database of the project and the website of Spoken Taiwanese Southern Min Corpus</p></div>
+                            ${actionBtn("link", "Corpus Site", "http://lngproc.ccu.edu.tw/SouthernMinCorpus/")}
+                    </div>
+
+                    <div class="p-8 border border-slate-100 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-left"><span class="text-slate-400 font-black text-xs uppercase tracking-widest">Feb 2009 - July 2009</span><h4 class="text-2xl font-black mt-2"> Department of speech and hearing disorders and sciences, <br> National Taipei University of Nursing and Health Sciences <br> Taipei, Taiwan </h4><p class="text-slate-500 italic">Full-time research assistant <br> • Supervisors: Prof. Sheng Hwa Chen <br> • Research Project: Outcome of vocal hygiene education and resonant voice therapy for female teachers with voice disorders <br> • Data collection in multiple hospitals <br> • Arranged establishment of the Speech and Hearing Center <br> • Assisted with administrative duties</p></div>
+                            
+                    </div>
+
+                </div>`
+            },
+            honors: {
+                cat: "Awards", title: "Recognition List",
+                images: ["https://images.unsplash.com/photo-1523240715639-99a8088fb98b?q=80&w=1470"],
+                content: `<div class="space-y-6 text-left">
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2020</span><h4 class="text-xl font-bold mt-4">The SNL Graduate Student Abstract Merit Award - Honorable Mention.</h4><p class="text-sm text-slate-500 mt-2">Society for the Neurobiology of Language. <br>${actionBtn("link", "SNL Website", "https://2025.neurolang.org/past-award-winners/")}</p></div>
+                        
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2020</span><h4 class="text-xl font-bold mt-4">Barbour Scholarship </h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan, USA. <br> Full tuition and required fees, stipend of $32,670 for one academic year. <br>${actionBtn("link", "News", "https://rackham.umich.edu/discover-rackham/announcing-the-2020-2021-barbour-scholars/")}</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2019</span><h4 class="text-xl font-bold mt-4">Rackham Conference Travel Grant </h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan,USA. <br> USD 1,050.</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2018</span><h4 class="text-xl font-bold mt-4">Rackham Conference Travel Grant </h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan, USA. <br> USD 1,050.</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2018</span><h4 class="text-xl font-bold mt-4">Rackham Humanities Research Fellowship </h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan, USA. <br> Stipend of $10,200 per term during the tenure and candidacy tuition and all fees for the winter term.</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2017</span><h4 class="text-xl font-bold mt-4">Rackham Conference Travel Grant </h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan, USA. <br> USD 798.</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2016</span><h4 class="text-xl font-bold mt-4">Chia-Lun Lo Fellowship 2016-2017</h4><p class="text-sm text-slate-500 mt-2">Rackham Graduate School, University of Michigan, USA. <br> USD 10,000.</p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2012</span><h4 class="text-xl font-bold mt-4">Travel grant for Linguistic Evidence 2012 (Germany)</h4><p class="text-sm text-slate-500 mt-2"> The Language Training and Testing Center, Taiwan.   <br> USD 333. </p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2012</span><h4 class="text-xl font-bold mt-4">Scholarship for Linguistic students</h4><p class="text-sm text-slate-500 mt-2"> National Science Council, Taiwan. <br> USD 1,166. </p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2010</span><h4 class="text-xl font-bold mt-4">The President's Award (for extraordinary academic achievement)</h4><p class="text-sm text-slate-500 mt-2"> National Chung Cheng University, Taiwan. <br> Tuition: USD 1,458. </p></div>
+
+                    <div class="p-8 rounded-3xl bg-orange-50 border border-orange-100"><span class="px-3 py-1 bg-orange-600 text-white text-[10px] font-black rounded-full">2009</span><h4 class="text-xl font-bold mt-4">The President's Award (for extraordinary academic achievement)</h4><p class="text-sm text-slate-500 mt-2"> National Chung Cheng University, Taiwan. <br> Tuition: USD 1,770. </p></div>
+
+
+                </div>`
+            },
+            publications: {
+  cat: "Archives",
+  title: "Journal Articles",
+  images: ["https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1373"],
+  content: `
+    <div class="space-y-10 text-left">
+
+      <div class="space-y-8">
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            Nikos Chalas, Lars Meyer, <span class="font-semibold">Chia-Wen Lo</span>, Hyojin Park,
+            Daniel S. Kluger, Omid Abbasi, Christoph Kayser, Robert Nitsch, Joachim Gross.
+            <span class="italic">
+              (2024). Dissociating prosodic from syntactic delta activity during natural speech comprehension.
+            </span>
+            <em>Current Biology</em>, 34, 1–13.
+          </p>
+          <a href="https://doi.org/10.1016/j.cub.2024.06.072" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.1016/j.cub.2024.06.072
+          </a>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span> & Lars Meyer.
+            <span class="italic">
+              (2024). Chunk boundaries disrupt dependency processing in an AG: Reconciling incremental processing and discrete sampling.
+            </span>
+            <em>PLOS ONE</em>, 19(6), e0305333.
+          </p>
+          <a href="https://doi.org/10.1371/journal.pone.0305333" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.1371/journal.pone.0305333
+          </a>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span>, Mark Anderson, Lena Henke, & Lars Meyer.
+            <span class="italic">
+              (2023). Periodic fluctuations in reading times reflect multi-word chunking.
+            </span>
+            <em>Scientific Reports</em>, 13, 18522.
+          </p>
+          <a href="https://doi.org/10.1038/s41598-023-45536-y" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.1038/s41598-023-45536-y
+          </a>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span>, Lena Henke, Jordi Martorell, & Lars Meyer.
+            <span class="italic">
+              (2023). When linguistic dogma rejects a neuroscientific hypothesis.
+            </span>
+            <em>Nature Reviews Neuroscience</em>.
+          </p>
+          <a href="https://doi.org/10.1038/s41583-023-00738-1" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.1038/s41583-023-00738-1
+          </a>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span>, Tzu-Yun Tung, Alan Hezao Ke, & Jonathan R. Brennan.
+            <span class="italic">
+              (2022). Hierarchy, not lexical regularity, modulates low-frequency neural synchrony during language comprehension.
+            </span>
+            <em>Neurobiology of Language</em>.
+          </p>
+          <a href="https://doi.org/10.1162/nol_a_00077" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.1162/nol_a_00077
+          </a>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+            <span class="italic">
+              (2021). EEG correlates of long-distance dependency formation in Mandarin wh-questions.
+            </span>
+            <em>Frontiers in Human Neuroscience</em>, 15, 591613.
+          </p>
+          <a href="https://doi.org/10.3389/fnhum.2021.591613" target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            doi:10.3389/fnhum.2021.591613
+          </a>
+        </div>
+
+      </div>
+    </div>
+  `
+},
+
+            proceedings: {
+  cat: "Events",
+  title: "Conference Papers",
+  images: ["https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1470"],
+  content: `
+    <div class="space-y-10 text-left">
+
+      <span class="text-[10px] font-semibold tracking-wider text-orange-500 uppercase block">
+        Peer-reviewed Proceedings
+      </span>
+
+      <div class="space-y-8">
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            Zhu, Jian, Zuoyu Tian, Yadong Liu, Cong Zhang, & 
+            <span class="font-semibold">Chia-Wen Lo</span>.
+            <span class="italic">
+              (2022). Bootstrapping meaning through listening: Unsupervised learning of spoken sentence embeddings.
+            </span>
+            <em>Findings of the Association for Computational Linguistics: EMNLP 2022</em>,
+            Abu Dhabi, United Arab Emirates.
+          </p>
+          <a href="https://aclanthology.org/2022.findings-emnlp.81/"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            Conference Paper
+          </a>
+        </div>
+
+      </div>
+    </div>
+  `
+},
+
+            talks: {
+  cat: "Lectures",
+  title: "Invited Talks",
+  images: ["https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1470"],
+  content: `
+    <div class="space-y-10 text-left">
+
+      <div class="space-y-6">
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Chia-Wen Lo</span>.
+            (2025, November).
+            <span class="italic">Language and Human Mind.</span>
+            Introduction to Linguistics (Prof. Shu-ing Shyu),
+            National Sun Yat-sen University, Kaohsiung, Taiwan.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Chia-Wen Lo</span>.
+            (2023, December).
+            <span class="italic">How brain rhythms shape language processing? The temporal structure of syntax.</span>
+            Introduction of Neurolinguistics (Dr. Chia-Hsuan Liao),
+            National Tsing Hua University, Hsinchu, Taiwan.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            Lena Henke, <span class="font-semibold">Chia-Wen Lo</span>, Lorenzo Titone, & Lars Meyer.
+            (2023, November).
+            <span class="italic">Language cycles – How brain rhythms shape language?</span>
+            Institute Colloquium,
+            Max Planck Institute for Human Cognitive and Brain Sciences, Leipzig, Germany.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Chia-Wen Lo</span>.
+            (2023, July).
+            <span class="italic">The temporal structure of syntax.</span>
+            Colloquium,
+            Computational Psycholinguistics Tokyo (CPT),
+            University of Tokyo, Tokyo, Japan.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Chia-Wen Lo</span>.
+            (2022, November).
+            <span class="italic">Project presentation.</span>
+            Lab talk (virtual),
+            Dr. Nai Ding’s Lab, Zhejiang University, Zhejiang, China.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            Lena Henke, Yulia Lamekina, <span class="font-semibold">Chia-Wen Lo</span>, Katharina Menn, & Lars Meyer.
+            (2022, November).
+            <span class="italic">How neural timing constrains language (processing) from the inside out?</span>
+            Institute Colloquium,
+            Max Planck Institute for Human Cognitive and Brain Sciences, Leipzig, Germany.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-sm leading-relaxed text-slate-700">
+            <span class="font-semibold">Lo, Chia-Wen</span>.
+            (2018, April).
+            <span class="italic">EEG correlates of covert dependency formation in Mandarin wh-questions.</span>
+            Graduate Student Colloquium,
+            University of Michigan, Ann Arbor, USA.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  `
+},
+
+            presentations: {
+  cat: "Activity",
+  title: "Conference Presentations",
+  images: ["https://images.unsplash.com/photo-1515162305285-0293e4767cc2?q=80&w=1471"],
+  content: `
+    <div class="space-y-10 text-left">
+
+      <span class="text-[10px] font-semibold tracking-wider text-orange-500 uppercase block">
+        Conference & Workshop Presentations
+      </span>
+
+      <div class="space-y-6">
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          Nikos Chalas, Lars Meyer, <span class="font-semibold">Chia-Wen Lo</span>, Hyojin Park,
+          Daniel S. Kluger, Omid Abbasi, Christoph Kayser, Robert Nitsch, Joachim Gross.
+          (2025, September).
+          <span class="italic">Dissociating prosodic from syntactic delta activity during natural speech comprehension.</span>
+          Poster presented at the International Conference on Cognitive Neuroscience (ICON 2025),
+          Porto, Portugal.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          Nikos Chalas, Lars Meyer, <span class="font-semibold">Chia-Wen Lo</span>, Hyojin Park,
+          Daniel S. Kluger, Omid Abbasi, Christoph Kayser, Robert Nitsch, Joachim Gross.
+          (2024, September).
+          <span class="italic">Dissociating endogenous and exogenous brain rhythms during natural speech processing.</span>
+          Classic Symposia, 53rd Congress of the German Psychological Society (DGPs) /
+          15th ÖGP Conference, Vienna, Austria.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Lars Meyer.
+          (2024, October).
+          <span class="italic">Does segmentation disrupt dependency processing? A frequency-tagging and ERP study on natural language.</span>
+          Poster presented at the 16th Annual Meeting of the Society for the Neurobiology of Language (SNL 2024),
+          Brisbane, Australia.
+        </p>
+        <a href="conference/Lo_SNL2024.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Mark Anderson, Lorenzo Titone, & Lars Meyer.
+          (2024, May).
+          <span class="italic">Is syntax optimized for periodic neurobiological sampling? Evidence from 21 languages.</span>
+          Poster presented at the 37th Annual Conference on Human Sentence Processing (HSP 2024),
+          Ann Arbor, Michigan, USA.
+        </p>
+        <a href="conference/Lo_HSP2024.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Mark Anderson, Lorenzo Titone, & Lars Meyer.
+          (2023, November).
+          <span class="italic">Are syntactic dependencies optimized for periodic neurobiological sampling?</span>
+          Talk presented at the Crosslinguistic Perspectives on Processing and Learning Workshop (X-PPL 2023),
+          Zurich, Switzerland.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Lena Henke, & Lars Meyer.
+          (2023, October).
+          <span class="italic">The cognitive throttle of language: Exploring the limits of information processing.</span>
+          Poster presented at the 15th Annual Meeting of the Society for the Neurobiology of Language (SNL 2023),
+          Marseille, France.
+        </p>
+        <a href="conference/Lo_SNL2023.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Mark Anderson, Lorenzo Titone, & Lars Meyer.
+          (2023, August).
+          <span class="italic">Are syntactic dependencies optimized for periodic neurobiological sampling?</span>
+          Talk presented at the workshop <em>Internal and External Pressures Shaping Language</em>,
+          34th European Summer School in Logic, Language and Information (ESSLLI),
+          Ljubljana, Slovenia.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Lars Meyer.
+          (2022, October).
+          <span class="italic">Do segment boundaries disrupt the processing of non-adjacent dependencies?</span>
+          Poster presented at the 14th Annual Meeting of the Society for the Neurobiology of Language (SNL 2022),
+          Philadelphia, PA, USA.
+        </p>
+        <a href="conference/Lo_SNL2022.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Mark Anderson, Lena Henke, & Lars Meyer.
+          (2022, October).
+          <span class="italic">Periodic chunking of language: Rhythmic neuronal processing mirrored in self-paced reading?</span>
+          Poster presented at the 14th Annual Meeting of the Society for the Neurobiology of Language (SNL 2022),
+          Philadelphia, PA, USA.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          Meyer, Lars, Mark Anderson, Lena Henke, & <span class="font-semibold">Chia-Wen Lo</span>.
+          (2022, April).
+          <span class="italic">Periodic chunking of language: Rhythmic neuronal processing mirrored in self-paced reading?</span>
+          Poster presented at the 29th Annual Meeting of the Cognitive Neuroscience Society (CNS 2022),
+          San Francisco, CA, USA.
+        </p>
+
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Chih Yeh, & Lars Meyer.
+          (2022, April).
+          <span class="italic">Do segment boundaries disrupt the processing of non-adjacent dependencies?</span>
+          Poster presented at the 29th Annual Meeting of the Cognitive Neuroscience Society (CNS 2022),
+          San Francisco, CA, USA.
+        </p>
+        <a href="conference/Lo_CNS2022.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2020, October).
+          <span class="italic">Testing semantic compositionality in low-frequency neural oscillations.</span>
+          Poster presented at the 12th Annual Meeting of the Society for the Neurobiology of Language (SNL 2020),
+          Virtual. <span class="italic">(Graduate Student Abstract Merit Award – Honorable Mention)</span>
+        </p>
+        <a href="conference/Lo_SNL2020_abs.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            ABSTRACT
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="conference/Lo_SNL2020.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2020, September).
+          <span class="italic">Lexical representation doesn’t fully capture low-frequency neural oscillations during sentence comprehension.</span>
+          Poster presented at AMLaP 2020, Virtual.
+        </p>
+        <a href="conference/Lo_AMLaP2020_abs.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            ABSTRACT
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://osf.io/vcq4z/overview"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            OSF
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://www.youtube.com/watch?v=V-lgvWSN2Fo&feature=youtu.be"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            YouTube
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2020, March).
+          <span class="italic">Testing temporal boundaries of composition in low-frequency neural oscillations.</span>
+          Poster presented at CUNY 2020, Virtual.
+        </p>
+        <a href="conference/Lo_CUNY2020_abs.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            ABSTRACT
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="conference/Lo_CUNY2020.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://osf.io/jketz/overview"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            OSF
+          </a>
+        <span class="hidden md:inline">•</span>
+        <a href="https://www.youtube.com/watch?v=nkhXVzjizFQ&feature=youtu.be"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            YouTube
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>, Tzu-Yun Tung, Alan Hezao Ke, & Jonathan R. Brennan.
+          (2019, August).
+          <span class="italic">Cortical tracking of Mandarin structures.</span>
+          Poster presented at SNL 2019, Helsinki, Finland.
+        </p>
+        <a href="conference/Lo_SNL2019.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2018, August).
+          <span class="italic">A simulation-based approach to statistical power with ERPs.</span>
+          Poster presented at SNL 2018, Québec City, Canada.
+        </p>
+        <a href="conference/Lo_SNL2018.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2018, March).
+          <span class="italic">EEG correlates of covert dependency formation in Mandarin wh-questions.</span>
+          Poster presented at CUNY 2018, UC Davis, CA, USA.
+        </p>
+        <a href="conference/Lo_CUNY2018.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span> & Jonathan R. Brennan.
+          (2017, November).
+          <span class="italic">EEG correlates of covert dependency formation in Mandarin wh-questions.</span>
+          Poster presented at SNL 2017, Baltimore, MD, USA.
+        </p>
+        <a href="conference/Lo_SNL2017.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>.
+          (2016, October).
+          <span class="italic">Unifying intervention effects in Mandarin wh-construal blocking.</span>
+          Poster presented at SSWAMP 2016, Northwestern University, Evanston, IL, USA.
+        </p>
+        <a href="conference/Lo_SSWAMP2016.pdf"
+             target="_blank"
+             class="text-xs text-slate-400 hover:text-orange-500 underline underline-offset-2">
+            POSTER
+          </a>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>.
+          (2013, April).
+          <span class="italic">Blocking in Chinese eventuality counting expressions: An experimental investigation.</span>
+          Presented at FOSS-9, National Chung Cheng University, Chiayi, Taiwan.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>.
+          (2012, February).
+          <span class="italic">Empirical evidence for the effect of eventuality counting expressions on covert dependencies.</span>
+          Linguistic Evidence 2012, University of Tübingen, Tübingen, Germany.
+        </p>
+
+        <p class="text-sm leading-relaxed text-slate-700">
+          <span class="font-semibold">Lo, Chia-Wen</span>.
+          (2010, November).
+          <span class="italic">Metonymy and teaching in Tang poetry.</span>
+          The 11th National Conference on Linguistics,
+          National Hsinchu University of Education, Hsinchu, Taiwan.
+        </p>
+
+      </div>
+    </div>
+  `
+},
+
+"teaching-2026-winter": {
+    cat: "Teaching",
+    title: "2026 Winter Courses",
+    images: [],
+    content: `
+      <div class="space-y-8">
+
+        <div class="p-6 bg-orange-50 rounded-2xl">
+          <h4 class="text-xl font-semibold serif text-slate-800">
+            應用語言學概論
+          </h4>
+          <p class="text-slate-600 mt-2 font-light leading-relaxed">
+            Introduction to applied linguistics, covering theories of language
+            acquisition, sociolinguistics, and applications.
+          </p>
+          <a href="syllabus_applied_linguistics.pdf" target="_blank"
+             class="btn-oval mt-4 inline-block">
+            Syllabus →
+          </a>
+        </div>
+
+        <div class="p-6 bg-orange-50 rounded-2xl">
+          <h4 class="text-xl font-semibold serif text-slate-800">
+            英文作文（二）
+          </h4>
+          <p class="text-slate-600 mt-2 font-light leading-relaxed">
+            Advanced academic writing with emphasis on argumentation and clarity.
+          </p>
+          <a href="syllabus_english_writing2.pdf" target="_blank"
+             class="btn-oval mt-4 inline-block">
+            Syllabus →
+          </a>
+        </div>
+
+      </div>
+    `
+  },
+
+  "teaching-2026-fall": {
+    cat: "Teaching",
+    title: "2026 Fall Courses",
+    images: [],
+    content: `
+      <div class="space-y-8">
+        <div class="p-6 bg-orange-50 rounded-2xl">
+          <h4 class="text-xl font-semibold serif text-slate-800">
+            Course to be announced
+          </h4>
+          <p class="text-slate-600 mt-2 font-light">
+            Course information will be updated.
+          </p>
+        </div>
+      </div>
+    `
+  }
+
+        };
+
+        function startCarouselLogic() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            if (slides.length <= 1) return;
+            let cur = 0;
+            carouselInterval = setInterval(() => {
+                slides[cur].classList.remove('active');
+                cur = (cur + 1) % slides.length;
+                slides[cur].classList.add('active');
+            }, 3500);
+        }
+
+        function openModal(key) {
+            const item = data[key];
+            if (!item) return;
+            let bannerHtml = `<div class="carousel-container shadow-2xl border-4 border-white">`;
+            item.images.forEach((img, idx) => {
+                bannerHtml += `<div class="carousel-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img}')"></div>`;
+            });
+            bannerHtml += `</div>`;
+            bannerRoot.innerHTML = bannerHtml;
+            modalCat.innerText = item.cat;
+            modalTitle.innerText = item.title;
+            modalContent.innerHTML = item.content;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            clearInterval(carouselInterval);
+            setTimeout(startCarouselLogic, 100);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            clearInterval(carouselInterval);
+        }
+
+        window.addEventListener('mousemove', e => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.body.style.setProperty('--bg-x', `${x}%`);
+            document.body.style.setProperty('--bg-y', `${y}%`);
+            const pt = document.getElementById('parallax-text');
+            if (pt && window.innerWidth > 1024) {
+                pt.style.transform = `translate(${(e.clientX - window.innerWidth/2)/50}px, ${(e.clientY - window.innerHeight/2)/50}px)`;
+            }
+        });
+
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
+>>>>>>> 8127eb4 (Update)
 </html>
